@@ -45,11 +45,13 @@
 - .ssh フォルダに authorized_keys のファイル名で保存
 
 ```sh:
->chmod 600 authorized_keys
+>chmod 600 .ssh/authorized_keys
 >chmod 700 .ssh
 ```
 
 ### SSH設定
+
+#### /etc/ssh/sshd‗config.d/sshd_mabo.conf
 
 - ポート番号の変更
 - rootでのログイン禁止
@@ -57,8 +59,8 @@
 - 公開鍵認証の許可
   - 認証鍵ファイルの指定
 
-```sh:/etc/ssh/sshd‗config.d/ssh_mabo.conf
->vi ssh_mabo.conf
+```sh:
+>vi sshd_mabo.conf
 Port 55022
 
 PermitRootLogin no
@@ -96,7 +98,9 @@ mabo@192.168.100.200: Permission denied (publickey).
 
 ### SSH接続の設定(接続元)
 
-```sh:mabo/.ssh/config
+#### mabo/.ssh/config
+
+```sh:
 Host raspi
     HostName 192.168.xx.xxx
     Port 55022
