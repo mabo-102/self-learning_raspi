@@ -161,3 +161,6 @@ cython_debug/
 
 # Original
 Tools/
+Include/
+Scripts/
+pyvenv.cfg
