@@ -36,7 +36,7 @@
 ### 公開鍵方式で SSH 接続
 
 ```sh:
->ssh-keygen -t ed25519 -f id_ed25519_raspi -C "your_email@example.com"
+> ssh-keygen -t ed25519 -f id_ed25519_raspi -C "your_email@example.com"
 ```
 
 ### アクセス権限の設定
@@ -44,9 +44,15 @@
 - id_ed25519_raspi.pub をラズパイに転送
 - .ssh フォルダに authorized_keys のファイル名で保存
 
+```sh
+> scp id_ed25519_raspi.pub mabo@raspi:~/.ssh/authorized_key
+```
+
+- アクセス権限の変更
+
 ```sh:
->chmod 600 .ssh/authorized_keys
->chmod 700 .ssh
+> chmod 600 .ssh/authorized_keys
+> chmod 700 .ssh
 ```
 
 ### SSH設定

@@ -166,3 +166,4 @@ Scripts/
 pyvenv.cfg
 Datasheet/
 Manual/
+*.code-workspace
