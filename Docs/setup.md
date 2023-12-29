@@ -36,7 +36,7 @@
 ### 公開鍵方式で SSH 接続
 
 ```sh:
->ssh-keygen -t ed25519 -f id_ed25519_raspi -C "your_email@example.com"
+> ssh-keygen -t ed25519 -f id_ed25519_raspi -C "your_email@example.com"
 ```
 
 ### アクセス権限の設定
@@ -44,9 +44,15 @@
 - id_ed25519_raspi.pub をラズパイに転送
 - .ssh フォルダに authorized_keys のファイル名で保存
 
+```sh
+> scp id_ed25519_raspi.pub mabo@raspi:~/.ssh/authorized_key
+```
+
+- アクセス権限の変更
+
 ```sh:
->chmod 600 .ssh/authorized_keys
->chmod 700 .ssh
+> chmod 600 .ssh/authorized_keys
+> chmod 700 .ssh
 ```
 
 ### SSH設定
@@ -88,12 +94,12 @@ Status: inactive
 ### SSH接続確認
 
 ```sh:OK
->ssh -i id_ed25519_raspi mabo@192.168.xx.xx -p 55022
+>ssh -i id_ed25519_raspi mabo@192.168.xxx.xxx -p 55022
 ```
 
 ```sh:NG
->ssh  mabo@192.168.xx.xx -p 55022
-mabo@192.168.100.200: Permission denied (publickey).
+>ssh  mabo@192.168.xxx.xxx -p 55022
+mabo@192.168.xxx.xxx: Permission denied (publickey).
 ```
 
 ### SSH接続の設定(接続元)
@@ -102,7 +108,7 @@ mabo@192.168.100.200: Permission denied (publickey).
 
 ```sh:
 Host raspi
-    HostName 192.168.xx.xxx
+    HostName 192.168.xxx.xxx
     Port 55022
     User mabo
     IdentityFile ~/.ssh/id_ed25519_raspi

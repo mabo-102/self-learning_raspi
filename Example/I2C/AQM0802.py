@@ -17,7 +17,6 @@ class AQM0802:
      └─│─│─│─│─│─│─┘  5: SDA
        1 2 3 4 5 6    6: 3V3
     """
-
     def __init__(self, debug=False):
         self.pi = pigpio.pi()
         self.h = None
