@@ -6,22 +6,30 @@ import Instruction as INST
 
 
 class AQM0802:
-    """AE-AQM0802+PCA9515 LCD(8x2)"""
+    """AE-AQM0802+PCA9515 LCD(8x2)
+    https://akizukidenshi.com/catalog/g/gK-11354/
+
+      (AE-AQM0802)    [I2C Address: 0x3e]
+     ┌─────────────┐  1: RST (NC) 
+     │     LCD     │  2: GND
+     │    (8x2)    │  3: LED (NC)
+     │─────────────│  4: SCL
+     └─│─│─│─│─│─│─┘  5: SDA
+       1 2 3 4 5 6    6: 3V3
+    """
+
     def __init__(self, debug=False):
         self.pi = pigpio.pi()
         self.h = None
         self.DEBUG = debug
 
-
     def open(self, i2c_bus=1, i2c_address=0x3e):
         self.h = self.pi.i2c_open(i2c_bus, i2c_address)
         if self.DEBUG: print(f"Handl# {self.h} opened.")
 
-
     def close(self):
         self.pi.i2c_close(self.h)
         if self.DEBUG: print(f"Hndle# {self.h} closed.")
-
 
     def display_initialize(self):
         if isinstance(self.h, type(None)):
@@ -41,18 +49,15 @@ class AQM0802:
         sleep(0.5)
         if self.DEBUG: print("LCD initialized.")
     
-
     def clear_display(self):
         cmd = INST.CLEAR_DISPLAY
         if self.DEBUG: print(f"Clear Display: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
 
-
     def return_home(self):
         cmd = INST.RETURN_HOME
         if self.DEBUG: print(f"Return Home: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
     def entry_mode_set(self, ID=True, S=False):
         cmd = INST.ENTRY_MODE_SET
@@ -61,7 +66,6 @@ class AQM0802:
         if self.DEBUG: print(f"Entry Mode Set: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
 
-
     def display_on_off(self, D=True, C=False, B=False):
         cmd = INST.DISPLAY_ON_OFF
         cmd += INST.ENTIRE_DISPLAY_ON if D else INST.ENTIRE_DISPLAY_OFF
@@ -69,7 +73,6 @@ class AQM0802:
         cmd += INST.CURSOR_BLINK_ON if B else INST.CURSOR_BLINK_OFF
         if self.DEBUG: print(f"Display ON/OFF: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
     def function_set(self, DL=True, N=True, DH=False, IS=False):
         cmd = INST.FUNCTION_SET
@@ -80,13 +83,11 @@ class AQM0802:
         if self.DEBUG: print(f"Function Set: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
 
-
     def set_ddram_address(self, pos=False):
         cmd = INST.SET_DDRAMADDRESS
         cmd += INST.DDRAM_ADDRESS2 if pos else INST.DDRAM_ADDRESS1
         if self.DEBUG: print(f"Set DDRAM address: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
     def write_data(self, data):
         hex_data = [ord(c) for c in list(data)]
@@ -103,13 +104,11 @@ class AQM0802:
                 self.pi.i2c_write_byte_data(self.h, INST.DATA_WRITE, d)
             sleep(0.3)
 
-
     def cursor_shift(self, RL=True):
         cmd = INST.CURSOR_OR_DISPLAY_SHIFT
         cmd += INST.TO_RIGHT if RL else INST.TO_LEFT
         if self.DEBUG: print(f"Cursor Shift: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
     def display_shift(self, RL=True):
         cmd = INST.CURSOR_OR_DISPLAY_SHIFT
@@ -117,7 +116,6 @@ class AQM0802:
         cmd += INST.TO_RIGHT if RL else INST.TO_LEFT
         if self.DEBUG: print(f"Screen Shift: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
     def power_icon_control_contrast_set(self):
         cmd = INST.POWER_ICON_CONTRAST_HIGH
@@ -127,13 +125,11 @@ class AQM0802:
         if self.DEBUG: print(f"Power/Icon control/Contrast set(high): {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
 
-
     def contrast_set(self):
         cmd = INST.CONTRAST_LOW
         if self.DEBUG: print(f"Contrast set(low): {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
         
-    
     def follower_control(self):
         cmd = INST.FOLLOWER_CONTROL
         cmd += INST.FOLLOWER_CIRCUIT_ON
@@ -141,13 +137,11 @@ class AQM0802:
         if self.DEBUG: print(f"Follower control: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
     
-
     def internal_OSC_frequency(self):
         cmd = INST.OSC_FREQUENCY
         cmd += INST.FREQUENCY_FOR_RF
         if self.DEBUG: print(f"Internal OSC frequency: {hex(cmd)}")
         self.pi.i2c_write_byte_data(self.h, INST.INSTRACTION, cmd)
-
 
 if __name__ == "__main__":
     aqm0802 = AQM0802()
@@ -159,4 +153,9 @@ if __name__ == "__main__":
     aqm0802.display_shift()
     aqm0802.cursor_shift()
     sleep(1)
+    aqm0802.clear_display()
+    aqm0802.return_home()
+    aqm0802.write_data("Good Bye!")
+    sleep(2)
+    aqm0802.display_on_off(D=False)
     aqm0802.close()
