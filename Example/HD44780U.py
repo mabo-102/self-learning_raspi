@@ -27,7 +27,7 @@ class HD44780U:
             self.d4to7 = d4to7
         self.lcd = CharLCD(
             self.pi,
-            pin_rs=self.rs, pin_rw=rw, pin_e=self.e, pins_data=self.d4to7,
+            pin_rs=self.rs, pin_rw=self.rw, pin_e=self.e, pins_data=self.d4to7,
             cols=16, rows=2
         )
 
